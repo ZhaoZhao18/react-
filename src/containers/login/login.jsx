@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { createDemo1Action, createDemo2Action } from '../../redux/action-creators/test-action'
 import './css/login.css'
 import logo from './img/logo.png'
 import { Form, Icon, Input, Button, message } from 'antd'
@@ -8,15 +10,16 @@ const { Item } = Form
 class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields( async(err, values) => {
+    this.props.demo1('0719')
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
         // console.log('Received values of form: ', values);
         const { username, password } = values
         try {
-          const response = await reqLogin(username,password)
+          const response = await reqLogin(username, password)
           console.log(response.data);
         } catch (error) {
-          console.log('请求出错了',error);
+          console.log('请求出错了', error);
         }
       } else {
         message.error('表单输入有误，请检查！')
@@ -45,7 +48,7 @@ class Login extends Component {
           <h1>商品管理系统</h1>
         </header>
         <section>
-          <h1>用户登录</h1>
+          <h1>用户登录{this.props.test}</h1>
           <Form onSubmit={this.handleSubmit} className="login-form">
             <Item>
               {getFieldDecorator('username', {
@@ -84,8 +87,10 @@ class Login extends Component {
     )
   }
 }
-export default Form.create()(Login)
-
+export default connect(
+  state => ({ test: state.test }),
+  { demo1: createDemo1Action, demo2: createDemo2Action }
+)(Form.create()(Login))
 // async和awaite
 // 简化promise的使用：1.不用再使用.then()来指定成功/失败的回调函数。2.以同步编码方式实现异步的回调函数
 // 哪里写await：在返回promise表达式的左侧写await：不想要promise，想要promise异步执行的成功的value数据
