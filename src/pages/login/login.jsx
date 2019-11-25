@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import './css/login.css'
 import logo from './img/logo.png'
-import { Form, Icon, Input, Button,message } from 'antd'
+import { Form, Icon, Input, Button, message } from 'antd'
 import 'antd/dist/antd.css'
+import { reqLogin } from '../../api'
 const { Item } = Form
 class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        // console.log('Received values of form: ', values);
+        const { username, password } = values
+        reqLogin(username, password).then(response => console.log('成功了',response.data)).catch(err => console.log(err))
       } else {
         message.error('表单输入有误，请检查！')
       }
