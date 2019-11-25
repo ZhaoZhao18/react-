@@ -8,11 +8,16 @@ const { Item } = Form
 class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields( async(err, values) => {
       if (!err) {
         // console.log('Received values of form: ', values);
         const { username, password } = values
-        reqLogin(username, password).then(response => console.log('成功了',response.data)).catch(err => console.log(err))
+        try {
+          const response = await reqLogin(username,password)
+          console.log(response.data);
+        } catch (error) {
+          console.log('请求出错了',error);
+        }
       } else {
         message.error('表单输入有误，请检查！')
       }
@@ -80,3 +85,9 @@ class Login extends Component {
   }
 }
 export default Form.create()(Login)
+
+// async和awaite
+// 简化promise的使用：1.不用再使用.then()来指定成功/失败的回调函数。2.以同步编码方式实现异步的回调函数
+// 哪里写await：在返回promise表达式的左侧写await：不想要promise，想要promise异步执行的成功的value数据
+// 哪里用async
+// await所在函数(最近的)定义的左侧写async
